@@ -1,0 +1,35 @@
+name: run action.py
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+   #workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v3 # checkout the repository content to github runner
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # install the python version needed
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute py script # run main.py
+        run: python test.py
+      
+      - name: Add and commit file
+        run: |
+          git config --global user.name "kartiknagila"
+          git config --global user.email "kartiknagila14@gmail.com"
+          git add log.txt
+          git commit -m "Add log.txt"
+          git push
